@@ -13,5 +13,13 @@
     "defaultMode": "bypassPermissions"
   },
   "autoUpdatesChannel": "latest",
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": []
+      }
+    ]
+  }
 }
