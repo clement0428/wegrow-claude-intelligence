@@ -1,0 +1,42 @@
+# Memory Index
+
+- [GROW Framework](feedback_grow_framework.md) — Always present G/R/O/W before executing any non-trivial task; O section must list available skills; includes project mode rules
+- [WeGrow Brand Colors](brand_colors.md) — Primary #E2CF35 (yellow), Secondary #808080 (gray); use for ALL UI work; no dark green
+- [Project Mode](project_mode.md) — Project context docs in Google Drive "Claude Projects" folder (id: 1y0oKPZzq_5PxK09skSa7_ccQvI-B7ZtG); read via MCP on start
+- [User Profile](user_profile.md) — 李厚寬 (Clement Lee), clement@wegrow.asia, WeGrow創辦人
+- [Auto-execute](feedback_auto_execute.md) — Always use dangerouslyDisableSandbox; never ask for confirmation before running commands
+- [梓官農場灌溉架構](project_farm_irrigation.md) — 方案A 25點/方案B 37點；B含田區路3欄；閥數A/B路13+12，田區3"×7
+- [架構圖字體大小](feedback_diagram_fonts.md) — matplotlib圖表字體必須填滿框框；box fs1≥18, motor≥13；每次生成後要預覽
+- [農場三輸出SOP](project_farm_output_sop.md) — 新農場案場標準輸出：規劃圖PNG+報價單HTML+思維檢查HTML；設計推算公式、字體規則、佔位符規範
+- [WeGrow自有產品](project_wegrow_products.md) — SW-SET32(32路/NT$66,800)、SW-SET16(16路/NT$38,000)是WeGrow自家產品，報價必須用這些型號
+- [Hugreen API 善農科技](reference_hugreen_api.md) — exapi.fufluns.net; auth: secret param (GET) / X-Hugreen-Secret header (POST); turn relay: POST /device/controller/turn {sid, turn:0/1}
+- [Clement 草莓思維模型](project_clement_thinking_model.md) — D1-D5死亡判斷樹、排液EC>4=甜度殺手、產銷三權重；FARM AI Stage 2；orbit_thinking_models localStorage
+- [三輪車販售](project_tricycle_sale.md) — V3電動三輪車 NT$15,000，台南麻豆，Line a1005234 李先生，58V鋰電池全新
+- [Deployment Workflow](feedback_deployment_workflow.md) — 不要每次改完就deploy；只在local測試，每晚23:00自動部署一次
+- [Orbit Deploy Architecture](project_orbit_deploy.md) — GitHub Actions + SSH deploy key (永不過期)；源碼→wegrow-orbit-src→Actions→clement0428.github.io
+- [Orbit Backend Production Fix](project_orbit_backend_fix.md) — Contabo VPS 185.227.134.38；deploy via workflow 281509962；greenhouses+stock_qty+UserRole.owner bugs fixed 2026-05-28
+- [Session Start Protocol](feedback_session_start.md) — EVERY session: read MEMORY.md + Google Drive "Claude Projects" folder (功能對應表 + project docs); NO OneDrive
+- [Check context before answering infra questions](feedback_check_context_first.md) — Never say "you don't have X" without reading project.md + memory first; caused major error re: api.wegrow-orbit.com
+- [Do everything yourself](feedback_do_everything_yourself.md) — Never hand steps back to user; obtain credentials in one shot then complete all setup yourself
+- [Add + Delete on every list](feedback_add_delete_101.md) — Every list/table MUST have both add AND delete; no exceptions (101 rule)
+- [Delete buttons on all lists](feedback_delete_buttons.md) — Every item list/table in Orbit UI MUST have a per-row × delete button; no exceptions
+- [WeGrow 單位經濟與農電許可前後](project_wegrow_unit_economics.md) — 前兩年純農自營無太陽能無加盟金；Year 3+加盟接手蓋太陽能收加盟金NT$700萬+作物分潤21%+農電分潤10%；七年財務原始數字
+- [網紋瓜加盟培訓課程](project_melon_training.md) — 14週Lv.1-7課程；每周Gamma簡報(sprout主題)；W1已完成；Excel+pptx素材路徑已記錄
+- [SIC DD Data Room](project_sic_dd.md) — Pre-Series A DD；9資料夾在OneDrive/Desktop/WeGrow/Finance/DD/2026/SIC；BP已壓縮35→27頁；P19待重設計
+- [All Projects Registry Rule](feedback_all_projects_registry.md) — Every new skill/tool/HTML/feature MUST be added to 功能對應表.html immediately after creation; no exceptions
+- [Verify Before Confirming](feedback_verify_before_confirm.md) — NEVER say "改好了" without grep verification showing old=0/new>0; must regenerate output file too; severe penalty rule
+- [Orbit Finance Sales Tab 待部署](project_orbit_sales_tab.md) — Sales 已整合為 Finance tab，local 測試中；本週確認後才 deploy，勿自動推送
+- [AI 助理知識範圍限制](feedback_ai_scope.md) — AI 只答 WeGrow 既有知識庫(蟲害SOP/七等級/Orbit功能)，超範圍必須回「不知道」，永久規則
+- [Developer Accountability](feedback_accountability.md) — 「最重要的就是對自己的話負責」；絕不說「好了」沒有實際驗證；文件/PPT要用真實資料
+- [PPTX 讀取方法](feedback_read_pptx.md) — zipfile解壓→讀<a:t>XML；若全是圖片則提取ppt/media/→Read tool看圖；永遠不說「讀不到PPT」
+- [Claude Config Storage](project_shared_env.md) — skills/commands/memory → local git → github.com/clement0428/claude-config (private)；project docs → Google Drive "Claude Projects"；NO OneDrive
+- [永不犯錯交代](feedback_never_again.md) — 2026-05-29 OneDrive事件後永久規則：中文路徑靜默失敗、禁止清單、儲存架構、驗證規則、災難復原順序
+- [Orbit 完成定義與可見性規則](feedback_orbit_done_definition.md) — 完成=四等級(本機/Git/deployed/production可見)；O1-O7七個驗證閘門；禁說「做好了」
+- [AI操作規範 O1-O10](feedback_ai_rules_guifan.md) — !給AI的規範.txt：O1-O7 Orbit完成閘門+08犯錯記錄+09先搜世界最新+10覆蓋/刪除必詢問
+- [wegrow-terra 農電開發 Pipeline](project_wegrow_terra.md) — 源碼 C:\Users\cowle\terra-src\；GitHub clement0428/wegrow-terra；port 5070；9步驟農電 pipeline
+- [WeGrow Sales CRM Hub](project_wegrow_sales_crm.md) — Flask localhost:5000；96聯絡人(AAMA/農會/電商/大通路)；雙重篩選戰情清單；data/含conversations+notes+quotes+imports
+- [Sales CRM MVP 原則](feedback_sales_crm_mvp.md) — 只做 Pipeline+next action+follow-up reminder；其餘全部延後；不要過度開發
+- [AI Sales Intelligence Command Center](project_ai_sales_command_center.md) — 轉型方向：AI 判斷哪個客戶值得追；三panel；5個AI功能Phase1；目前在產品設計層
+- [Claude Projects 標準路徑](feedback_project_location.md) — 所有 projects 放 C:\Users\cowle\OneDrive\文件\Claude\Projects；Bash 存取（中文路徑）；wegrow-sales 待搬移
+- [五年AI知識治理流程](project_ai_knowledge_governance.md) — Obsidian母庫+Git版控+Notion呈現層；AI草稿→Inbox→Review→Canonical三大類(Orbit/Terra/Sales)；衝突先記錄不合併
+- [Obsidian AI工作指導書](feedback_obsidian_ai_guide.md) — 操作Vault必讀：三大區分類規則、frontmatter必填欄位、AI建議連結段落、衝突登記Conflict-Log、9條規則+最終檢查清單

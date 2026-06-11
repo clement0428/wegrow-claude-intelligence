@@ -1,0 +1,135 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Session Start Protocol (MANDATORY)
+
+At the beginning of EVERY new conversation, Claude MUST:
+1. Read memory index at `C:\Users\cowle\.claude\projects\C--Users-cowle--claude\memory\MEMORY.md` — this is the primary context source
+2. Search Google Drive for "1.功能對應表" in folder "Claude Projects" to get the master tool/project index
+3. Search Google Drive for "project" in folder "Claude Projects" for per-project context docs
+4. Never ask "what were we working on" — the answer is always in these sources
+
+**Storage locations:**
+- Memory/skills/commands: `C:\Users\cowle\.claude\` (git-backed → github.com/clement0428/claude-config) — NO OneDrive dependency
+- Project context docs: Google Drive → "Claude Projects" folder (id: 1y0oKPZzq_5PxK09skSa7_ccQvI-B7ZtG) — read via MCP
+- Orbit source code: `C:\Users\cowle\orbit-src\`
+- Flask apps source code: `C:\Users\cowle\dev\projects\` (safe local path, NOT OneDrive — git-backed to GitHub)
+  - 採購管理: `dev\projects\wegrow-purchase\` (port 5050) → github.com/clement0428/wegrow-purchase
+  - 土地開發: `dev\projects\wegrow-land\` (port 5070) → github.com/clement0428/wegrow-land
+  - 財務報銷: `dev\projects\wegrow-finance\` (port 5055) → github.com/clement0428/wegrow-finance
+  - 專案啟動台: `dev\projects\wegrow-launchpad\` (port 5080) → github.com/clement0428/wegrow-launchpad
+  - Sales CRM: `dev\projects\wegrow-sales\` (port 5000) → github.com/clement0428/wegrow-sales
+
+This ensures continuity across sessions without the user needing to re-explain prior work.
+
+## WeGrow Cloud Automation And Obsidian Rules
+
+For WeGrow Orbit, KengYi, Terra, Sales, daily AI reports, Obsidian sync, Notion, LINE, or farm automation, Claude Code MUST read:
+
+`C:\Users\cowle\Documents\Codex\WeGrow-Orbit-Total-Memory\AI_AGENT_CLOUD_AUTOMATION_AND_OBSIDIAN_RULES.md`
+
+Key rule: Clement's computer is not the primary automation host. Local desktop automations under `C:\Users\cowle\.codex\automations` do not reliably run when the computer is shut down, sleeping, or offline. Do not claim daily KengYi reports, AI reports, Obsidian sync, Notion sync, or LINE notifications will run unattended unless a cloud runner has been implemented and verified.
+
+Design future automation for 400 remote farms: cloud scheduler, per-farm ingestion, per-farm status/freshness/errors, queued AI analysis, Git-backed Markdown outputs, failure manifests, and human approval for high-risk operational actions.
+
+All AI-created Obsidian Markdown must go under Clement's three top-level areas:
+
+- `Wegrow-Orbit`: KengYi, farm management, cultivation technology, FARMS, Hugreen, O2+O3, pest/disease, fertigation, greenhouse operations.
+- `WeGrow-Terra`: land development, land scoring, due diligence, subsidy applications, zoning, site evaluation.
+- `Wegrow-sales`: customer search, conversion-rate evaluation, CRM, sales pipeline, account notes.
+
+Use Obsidian wiki links and frontmatter to express useful relationships between notes. Do not invent links or integrations. Notion and LINE are `not_configured` unless credentials, target IDs, and successful delivery proof exist.
+
+## Projects Overview
+
+This workspace contains two separate Vue 2 SPA frontend projects:
+
+| Project | Directory | Port | Purpose |
+|---------|-----------|------|---------|
+| **wegrow** | `./wegrow/` | 8080 | WeGrow 智慧農業平台 — admin tool mirroring https://wegrow.fufluns.net |
+| **farmwatch** | `./farmwatch/` | 8081 | 福農監控平台 — corporate welfare committee farm monitoring dashboard |
+
+A standalone UI preview document is at `./farmwatch-preview.html` (open in browser, print to PDF).
+
+---
+
+## Commands
+
+Both projects share the same npm scripts. Run from inside the project directory:
+
+```bash
+# Development server
+cd wegrow && npm run serve      # → http://localhost:8080
+cd farmwatch && npm run serve   # → http://localhost:8081
+
+# Production build (outputs to dist/)
+npm run build
+```
+
+Node.js is installed at `C:\Program Files\nodejs`. If `npm` is not on PATH in a new shell:
+```bash
+export PATH="/c/Program Files/nodejs:$PATH"
+```
+
+No test runner is configured in either project.
+
+---
+
+## Architecture
+
+### Shared Stack (both projects)
+- **Vue 2.6** + **Vue Router 3** (hash mode) + **Vuex 3**
+- **Element UI 2.15** — all form controls, tables, dialogs, layout grid
+- **ECharts 5.4** — all charts; always init in `mounted()` via `this.$nextTick`, always destroy in `beforeDestroy()`, always add `window.addEventListener('resize', ...)` handler
+- **Axios 0.27** — all HTTP via `src/api/request.js` instance
+
+### wegrow
+
+**Backend:** `https://appapi.fufluns.net` (all endpoints POST). Routes match the live site's URL structure exactly (e.g. `/#/dataAnalysisSystem/dataAnalysisSystem`).
+
+**Auth:** Token stored in `localStorage` as `wegrow_token`. On 401 the interceptor clears the token and redirects to `/#/login`. Login falls back to demo mode (any credentials accepted, roles set to `['admin']`) if the API is unreachable.
+
+**Role-gating:** The `writeDeviceId` route has `meta.permissions: ['admin','ROLE_device_manager','ROLE_admin']`. The layout reads `store.getters['user/roles']` to conditionally render the HUB 生產工具 nav item.
+
+**Vuex:** Single `user` module (namespaced). Getters: `user/token`, `user/userInfo`, `user/roles`.
+
+**API modules** in `src/api/`:
+- `user.js` — login, logout, getUserInfo, getUserList
+- `hub.js` — getHubInfoFamily, getHubByUserName, getHubHistory, exportHubHistory, notifications
+- `farm.js` — full CRUD for `/farm/*` and `/greenhouse/*`, plus gateway/controller endpoints
+- `weather.js` — QWeather GEO + 7-day forecast (API key placeholder in this file)
+
+### farmwatch
+
+**Backend:** `http://localhost:3000/api` (placeholder; not yet connected to real IoT API). The Axios error interceptor returns `null` instead of rejecting, so **every view must check for null and fall back to mock data**.
+
+**Mock data** lives entirely in `src/utils/mock.js`:
+- `mockFarms` — array of 4 farm objects with full sensor readings, pest status, alerts, yield predictions
+- `generateHistory(baseValue, variance, hours)` — generates hourly time-series for charts
+- `generateYieldHistory()` — monthly actual vs. predicted series
+- `mockHarvestHistory`, `pestEvents` — static arrays for tables/timelines
+- `TODAY = new Date('2026-03-26')`, `getDaysUntil(dateStr)` — date helpers
+
+**Auth:** Token in `localStorage` as `farmwatch_token`. Demo login: `admin` / `1234` (handled entirely in the Login view; no real auth endpoint exists yet).
+
+**Vuex:** Flat store (not namespaced modules). State: `token`, `user`, `farms`, `alerts`. Getters: `isLoggedIn`, `userName`, `dangerFarms`, `warningFarms`.
+
+**Reusable components** in `src/components/`:
+- `SensorCard.vue` — props: `label, value, unit, icon, status`
+- `FarmStatusBadge.vue` — props: `status` (`'healthy'|'warning'|'danger'`)
+- `HarvestCountdown.vue` — props: `targetDate, cropName`
+- `AlertItem.vue` — props: `type, message, time, farmName`
+
+**Farm detail routing:** `src/views/farm-detail/index.vue` reads `this.$route.params.id`, finds the matching farm from `mockFarms` (numeric id match).
+
+---
+
+## Key Conventions
+
+- **All text is Traditional Chinese (繁體中文)**
+- **Green color theme:** primary `#1b5e20` / `#2e7d32`, accent `#4caf50`, background `#f1f8e9`
+- Status levels are always: `healthy` → green, `warning` → `#ff9800`, `danger` → `#f44336`
+- Both projects use `<style scoped>` in all components
+- No TypeScript — plain JS throughout
+- No test files exist in either project
